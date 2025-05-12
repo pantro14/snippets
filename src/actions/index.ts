@@ -46,8 +46,6 @@ export async function createSnippet(
         code,
       },
     });
-
-    throw new Error("Failed to save to database.");
   } catch (error: unknown) {
     if (error instanceof Error) {
       return { message: error.message };

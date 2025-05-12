@@ -4,15 +4,17 @@ import Link from "next/link";
 import * as actions from "@/actions";
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function SnippetShowPage({ params }: Props) {
+  const { id } = await params;
+
   await new Promise((r) => setTimeout(r, 2000));
   const snippet = await db.snippet.findFirst({
-    where: { id: parseInt(params.id) },
+    where: { id: parseInt(id) },
   });
   if (!snippet) {
     return notFound();
@@ -43,6 +45,7 @@ export default async function SnippetShowPage({ params }: Props) {
   );
 }
 
+// Prod ONLY: enable cache for all the snippets
 export async function generateStaticParams() {
   const snippets = await db.snippet.findMany();
 
